@@ -53,24 +53,22 @@
             txtSearch = new TextBox();
             cmbFilterGender = new ComboBox();
             dgContacts = new DataGridView();
-            lblStatus = new StatusStrip();
-            lblCounts = new StatusStrip();
-            errorProvider = new ErrorProvider(components);
             colFullName = new DataGridViewTextBoxColumn();
             colEmail = new DataGridViewTextBoxColumn();
             colPhone = new DataGridViewTextBoxColumn();
             colGender = new DataGridViewTextBoxColumn();
             colBirthDate = new DataGridViewTextBoxColumn();
             colCreatedAt = new DataGridViewTextBoxColumn();
-            lblStatus1 = new ToolStripStatusLabel();
-            lblCounts1 = new ToolStripStatusLabel();
+            errorProvider = new ErrorProvider(components);
+            statusStrip1 = new StatusStrip();
+            lblStatus = new ToolStripStatusLabel();
+            lblCounts = new ToolStripStatusLabel();
             grpInput.SuspendLayout();
             grpActions.SuspendLayout();
             grpFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgContacts).BeginInit();
-            lblStatus.SuspendLayout();
-            lblCounts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
+            statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // grpInput
@@ -87,11 +85,9 @@
             grpInput.Controls.Add(label2);
             grpInput.Controls.Add(txtFullName);
             grpInput.Controls.Add(label1);
-            grpInput.Location = new Point(17, 20);
-            grpInput.Margin = new Padding(4, 5, 4, 5);
+            grpInput.Location = new Point(12, 12);
             grpInput.Name = "grpInput";
-            grpInput.Padding = new Padding(4, 5, 4, 5);
-            grpInput.Size = new Size(643, 383);
+            grpInput.Size = new Size(450, 230);
             grpInput.TabIndex = 0;
             grpInput.TabStop = false;
             grpInput.Text = "Add/Update Contact";
@@ -99,10 +95,9 @@
             // btnUpdateContact
             // 
             btnUpdateContact.Enabled = false;
-            btnUpdateContact.Location = new Point(303, 290);
-            btnUpdateContact.Margin = new Padding(4, 5, 4, 5);
+            btnUpdateContact.Location = new Point(212, 174);
             btnUpdateContact.Name = "btnUpdateContact";
-            btnUpdateContact.Size = new Size(194, 38);
+            btnUpdateContact.Size = new Size(136, 23);
             btnUpdateContact.TabIndex = 11;
             btnUpdateContact.Text = "Update Selected";
             btnUpdateContact.UseVisualStyleBackColor = true;
@@ -110,10 +105,9 @@
             // 
             // btnAddContact
             // 
-            btnAddContact.Location = new Point(73, 290);
-            btnAddContact.Margin = new Padding(4, 5, 4, 5);
+            btnAddContact.Location = new Point(51, 174);
             btnAddContact.Name = "btnAddContact";
-            btnAddContact.Size = new Size(194, 38);
+            btnAddContact.Size = new Size(136, 23);
             btnAddContact.TabIndex = 10;
             btnAddContact.Text = "Add Contact";
             btnAddContact.UseVisualStyleBackColor = true;
@@ -122,19 +116,17 @@
             // dtpBirthDate
             // 
             dtpBirthDate.Format = DateTimePickerFormat.Short;
-            dtpBirthDate.Location = new Point(9, 208);
-            dtpBirthDate.Margin = new Padding(4, 5, 4, 5);
+            dtpBirthDate.Location = new Point(6, 125);
             dtpBirthDate.Name = "dtpBirthDate";
-            dtpBirthDate.Size = new Size(151, 31);
+            dtpBirthDate.Size = new Size(107, 23);
             dtpBirthDate.TabIndex = 9;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(9, 178);
-            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Location = new Point(6, 107);
             label5.Name = "label5";
-            label5.Size = new Size(90, 25);
+            label5.Size = new Size(59, 15);
             label5.TabIndex = 8;
             label5.Text = "Birth Date";
             // 
@@ -143,80 +135,72 @@
             cmbGender.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbGender.FormattingEnabled = true;
             cmbGender.Items.AddRange(new object[] { "Male", "Female", "Non-binary", "Prefer not to say" });
-            cmbGender.Location = new Point(303, 135);
-            cmbGender.Margin = new Padding(4, 5, 4, 5);
+            cmbGender.Location = new Point(212, 81);
             cmbGender.Name = "cmbGender";
-            cmbGender.Size = new Size(257, 33);
+            cmbGender.Size = new Size(181, 23);
             cmbGender.TabIndex = 7;
             cmbGender.SelectedIndexChanged += InputChanged;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(303, 105);
-            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Location = new Point(212, 63);
             label4.Name = "label4";
-            label4.Size = new Size(69, 25);
+            label4.Size = new Size(45, 15);
             label4.TabIndex = 6;
             label4.Text = "Gender";
             // 
             // mtbPhone
             // 
-            mtbPhone.Location = new Point(9, 135);
-            mtbPhone.Margin = new Padding(4, 5, 4, 5);
+            mtbPhone.Location = new Point(6, 81);
             mtbPhone.Mask = "00000000000";
             mtbPhone.Name = "mtbPhone";
-            mtbPhone.Size = new Size(257, 31);
+            mtbPhone.Size = new Size(181, 23);
             mtbPhone.TabIndex = 5;
             mtbPhone.TextChanged += InputChanged;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(9, 105);
-            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Location = new Point(6, 63);
             label3.Name = "label3";
-            label3.Size = new Size(62, 25);
+            label3.Size = new Size(41, 15);
             label3.TabIndex = 4;
             label3.Text = "Phone";
             // 
             // txtEmail
             // 
-            txtEmail.Location = new Point(303, 62);
-            txtEmail.Margin = new Padding(4, 5, 4, 5);
+            txtEmail.Location = new Point(212, 37);
             txtEmail.Name = "txtEmail";
             txtEmail.PlaceholderText = "name@example.com";
-            txtEmail.Size = new Size(257, 31);
+            txtEmail.Size = new Size(181, 23);
             txtEmail.TabIndex = 3;
             txtEmail.TextChanged += InputChanged;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(303, 32);
-            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Location = new Point(212, 19);
             label2.Name = "label2";
-            label2.Size = new Size(54, 25);
+            label2.Size = new Size(36, 15);
             label2.TabIndex = 2;
             label2.Text = "Email";
             // 
             // txtFullName
             // 
-            txtFullName.Location = new Point(9, 62);
-            txtFullName.Margin = new Padding(4, 5, 4, 5);
+            txtFullName.Location = new Point(6, 37);
             txtFullName.Name = "txtFullName";
             txtFullName.PlaceholderText = "Juan Dela Cruz";
-            txtFullName.Size = new Size(257, 31);
+            txtFullName.Size = new Size(181, 23);
             txtFullName.TabIndex = 1;
             txtFullName.TextChanged += InputChanged;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(9, 32);
-            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Location = new Point(6, 19);
             label1.Name = "label1";
-            label1.Size = new Size(91, 25);
+            label1.Size = new Size(61, 15);
             label1.TabIndex = 0;
             label1.Text = "Full Name";
             // 
@@ -226,21 +210,18 @@
             grpActions.Controls.Add(chkConfirmDelete);
             grpActions.Controls.Add(btnClearAll);
             grpActions.Controls.Add(btnRemoveSelected);
-            grpActions.Location = new Point(17, 413);
-            grpActions.Margin = new Padding(4, 5, 4, 5);
+            grpActions.Location = new Point(12, 248);
             grpActions.Name = "grpActions";
-            grpActions.Padding = new Padding(4, 5, 4, 5);
-            grpActions.Size = new Size(643, 217);
+            grpActions.Size = new Size(450, 130);
             grpActions.TabIndex = 1;
             grpActions.TabStop = false;
             grpActions.Text = "Actions";
             // 
             // btnExportCsv
             // 
-            btnExportCsv.Location = new Point(171, 152);
-            btnExportCsv.Margin = new Padding(4, 5, 4, 5);
+            btnExportCsv.Location = new Point(120, 91);
             btnExportCsv.Name = "btnExportCsv";
-            btnExportCsv.Size = new Size(219, 38);
+            btnExportCsv.Size = new Size(153, 23);
             btnExportCsv.TabIndex = 3;
             btnExportCsv.Text = "Export Visible to CSV";
             btnExportCsv.UseVisualStyleBackColor = true;
@@ -251,20 +232,18 @@
             chkConfirmDelete.AutoSize = true;
             chkConfirmDelete.Checked = true;
             chkConfirmDelete.CheckState = CheckState.Checked;
-            chkConfirmDelete.Location = new Point(171, 85);
-            chkConfirmDelete.Margin = new Padding(4, 5, 4, 5);
+            chkConfirmDelete.Location = new Point(120, 51);
             chkConfirmDelete.Name = "chkConfirmDelete";
-            chkConfirmDelete.Size = new Size(228, 29);
+            chkConfirmDelete.Size = new Size(153, 19);
             chkConfirmDelete.TabIndex = 2;
             chkConfirmDelete.Text = "Confirm before deletion";
             chkConfirmDelete.UseVisualStyleBackColor = true;
             // 
             // btnClearAll
             // 
-            btnClearAll.Location = new Point(303, 37);
-            btnClearAll.Margin = new Padding(4, 5, 4, 5);
+            btnClearAll.Location = new Point(212, 22);
             btnClearAll.Name = "btnClearAll";
-            btnClearAll.Size = new Size(194, 38);
+            btnClearAll.Size = new Size(136, 23);
             btnClearAll.TabIndex = 1;
             btnClearAll.Text = "Clear All";
             btnClearAll.UseVisualStyleBackColor = true;
@@ -273,10 +252,9 @@
             // btnRemoveSelected
             // 
             btnRemoveSelected.Enabled = false;
-            btnRemoveSelected.Location = new Point(73, 37);
-            btnRemoveSelected.Margin = new Padding(4, 5, 4, 5);
+            btnRemoveSelected.Location = new Point(51, 22);
             btnRemoveSelected.Name = "btnRemoveSelected";
-            btnRemoveSelected.Size = new Size(194, 38);
+            btnRemoveSelected.Size = new Size(136, 23);
             btnRemoveSelected.TabIndex = 0;
             btnRemoveSelected.Text = "Remove Selected";
             btnRemoveSelected.UseVisualStyleBackColor = true;
@@ -288,21 +266,18 @@
             grpFilter.Controls.Add(btnApplyFilter);
             grpFilter.Controls.Add(txtSearch);
             grpFilter.Controls.Add(cmbFilterGender);
-            grpFilter.Location = new Point(746, 20);
-            grpFilter.Margin = new Padding(4, 5, 4, 5);
+            grpFilter.Location = new Point(522, 12);
             grpFilter.Name = "grpFilter";
-            grpFilter.Padding = new Padding(4, 5, 4, 5);
-            grpFilter.Size = new Size(643, 217);
+            grpFilter.Size = new Size(450, 130);
             grpFilter.TabIndex = 2;
             grpFilter.TabStop = false;
             grpFilter.Text = "Filter/Search";
             // 
             // btnResetFilter
             // 
-            btnResetFilter.Location = new Point(299, 150);
-            btnResetFilter.Margin = new Padding(4, 5, 4, 5);
+            btnResetFilter.Location = new Point(209, 90);
             btnResetFilter.Name = "btnResetFilter";
-            btnResetFilter.Size = new Size(140, 38);
+            btnResetFilter.Size = new Size(98, 23);
             btnResetFilter.TabIndex = 3;
             btnResetFilter.Text = "Reset Filter";
             btnResetFilter.UseVisualStyleBackColor = true;
@@ -310,10 +285,9 @@
             // 
             // btnApplyFilter
             // 
-            btnApplyFilter.Location = new Point(150, 150);
-            btnApplyFilter.Margin = new Padding(4, 5, 4, 5);
+            btnApplyFilter.Location = new Point(105, 90);
             btnApplyFilter.Name = "btnApplyFilter";
-            btnApplyFilter.Size = new Size(140, 38);
+            btnApplyFilter.Size = new Size(98, 23);
             btnApplyFilter.TabIndex = 2;
             btnApplyFilter.Text = "Apply Filter";
             btnApplyFilter.UseVisualStyleBackColor = true;
@@ -321,11 +295,10 @@
             // 
             // txtSearch
             // 
-            txtSearch.Location = new Point(9, 32);
-            txtSearch.Margin = new Padding(4, 5, 4, 5);
+            txtSearch.Location = new Point(6, 19);
             txtSearch.Name = "txtSearch";
             txtSearch.PlaceholderText = "Search by Name or Email...";
-            txtSearch.Size = new Size(428, 31);
+            txtSearch.Size = new Size(301, 23);
             txtSearch.TabIndex = 1;
             // 
             // cmbFilterGender
@@ -333,10 +306,9 @@
             cmbFilterGender.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbFilterGender.FormattingEnabled = true;
             cmbFilterGender.Items.AddRange(new object[] { "All", "Male", "Female", "Non-binary", "Prefer not to say" });
-            cmbFilterGender.Location = new Point(9, 80);
-            cmbFilterGender.Margin = new Padding(4, 5, 4, 5);
+            cmbFilterGender.Location = new Point(6, 48);
             cmbFilterGender.Name = "cmbFilterGender";
-            cmbFilterGender.Size = new Size(171, 33);
+            cmbFilterGender.Size = new Size(121, 23);
             cmbFilterGender.TabIndex = 0;
             // 
             // dgContacts
@@ -345,42 +317,15 @@
             dgContacts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgContacts.Columns.AddRange(new DataGridViewColumn[] { colFullName, colEmail, colPhone, colGender, colBirthDate, colCreatedAt });
             dgContacts.Dock = DockStyle.Bottom;
-            dgContacts.Location = new Point(0, 781);
-            dgContacts.Margin = new Padding(4, 5, 4, 5);
+            dgContacts.Location = new Point(0, 469);
             dgContacts.MultiSelect = false;
             dgContacts.Name = "dgContacts";
             dgContacts.ReadOnly = true;
             dgContacts.RowHeadersWidth = 62;
             dgContacts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgContacts.Size = new Size(1406, 237);
+            dgContacts.Size = new Size(984, 142);
             dgContacts.TabIndex = 3;
             dgContacts.SelectionChanged += dgContacts_SelectionChanged;
-            // 
-            // lblStatus
-            // 
-            lblStatus.ImageScalingSize = new Size(24, 24);
-            lblStatus.Items.AddRange(new ToolStripItem[] { lblStatus1 });
-            lblStatus.Location = new Point(0, 749);
-            lblStatus.Name = "lblStatus";
-            lblStatus.Padding = new Padding(1, 0, 20, 0);
-            lblStatus.Size = new Size(1406, 32);
-            lblStatus.TabIndex = 4;
-            lblStatus.Text = "Ready";
-            // 
-            // lblCounts
-            // 
-            lblCounts.ImageScalingSize = new Size(24, 24);
-            lblCounts.Items.AddRange(new ToolStripItem[] { lblCounts1 });
-            lblCounts.Location = new Point(0, 717);
-            lblCounts.Name = "lblCounts";
-            lblCounts.Padding = new Padding(1, 0, 20, 0);
-            lblCounts.Size = new Size(1406, 32);
-            lblCounts.TabIndex = 5;
-            lblCounts.Text = "Visible: 0/Total: 0";
-            // 
-            // errorProvider
-            // 
-            errorProvider.ContainerControl = this;
             // 
             // colFullName
             // 
@@ -430,33 +375,42 @@
             colCreatedAt.ReadOnly = true;
             colCreatedAt.Width = 150;
             // 
-            // lblStatus1
+            // errorProvider
             // 
-            lblStatus1.Name = "lblStatus1";
-            lblStatus1.Size = new Size(60, 25);
-            lblStatus1.Text = "Ready";
+            errorProvider.ContainerControl = this;
             // 
-            // lblCounts1
+            // statusStrip1
             // 
-            lblCounts1.Name = "lblCounts1";
-            lblCounts1.Size = new Size(1339, 25);
-            lblCounts1.Spring = true;
-            lblCounts1.Text = "Visible: 0/Total: 0";
-            lblCounts1.TextAlign = ContentAlignment.MiddleRight;
+            statusStrip1.Items.AddRange(new ToolStripItem[] { lblStatus, lblCounts });
+            statusStrip1.Location = new Point(0, 447);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new Size(984, 22);
+            statusStrip1.TabIndex = 4;
+            statusStrip1.Text = "statusStrip1";
+            // 
+            // lblStatus
+            // 
+            lblStatus.Name = "lblStatus";
+            lblStatus.Size = new Size(39, 17);
+            lblStatus.Text = "Ready";
+            // 
+            // lblCounts
+            // 
+            lblCounts.Name = "lblCounts";
+            lblCounts.Size = new Size(101, 17);
+            lblCounts.Text = "Visible: 0 / Total: 0";
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1406, 1018);
-            Controls.Add(lblCounts);
-            Controls.Add(lblStatus);
+            ClientSize = new Size(984, 611);
+            Controls.Add(statusStrip1);
             Controls.Add(dgContacts);
             Controls.Add(grpFilter);
             Controls.Add(grpActions);
             Controls.Add(grpInput);
             FormBorderStyle = FormBorderStyle.FixedSingle;
-            Margin = new Padding(4, 5, 4, 5);
             MaximizeBox = false;
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
@@ -468,11 +422,9 @@
             grpFilter.ResumeLayout(false);
             grpFilter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgContacts).EndInit();
-            lblStatus.ResumeLayout(false);
-            lblStatus.PerformLayout();
-            lblCounts.ResumeLayout(false);
-            lblCounts.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -503,8 +455,6 @@
         private Button btnApplyFilter;
         private TextBox txtSearch;
         private DataGridView dgContacts;
-        private StatusStrip lblStatus;
-        private StatusStrip lblCounts;
         private ErrorProvider errorProvider;
         private DataGridViewTextBoxColumn colFullName;
         private DataGridViewTextBoxColumn colEmail;
@@ -512,7 +462,8 @@
         private DataGridViewTextBoxColumn colGender;
         private DataGridViewTextBoxColumn colBirthDate;
         private DataGridViewTextBoxColumn colCreatedAt;
-        private ToolStripStatusLabel lblStatus1;
-        private ToolStripStatusLabel lblCounts1;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel lblStatus;
+        private ToolStripStatusLabel lblCounts;
     }
 }

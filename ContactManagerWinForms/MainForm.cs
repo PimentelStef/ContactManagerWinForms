@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Drawing;
+using System.Text;
 
 namespace ContactManagerWinForms
 {
@@ -11,6 +12,10 @@ namespace ContactManagerWinForms
         {
             InitializeComponent();
             InitializeDataBinding();
+
+            btnAddContact.Enabled = false;
+            btnUpdateContact.Enabled = false;
+            btnRemoveSelected.Enabled = false;
         }
 
         private void InitializeDataBinding()
@@ -95,7 +100,7 @@ namespace ContactManagerWinForms
         {
             if (!ValidateInputs())
             {
-                lblStatus.Text = "Validation failed! Please fix errors...";
+                statusStrip1.Text = "Validation failed! Please fix errors...";
                 return;
             }
 
@@ -113,14 +118,18 @@ namespace ContactManagerWinForms
             ClearInputs();
             UpdateStatusCounts();
 
-            lblStatus.Text = $"Added: {contact.FullName}";
+            statusStrip1.Text = $"Added: {contact.FullName}";
+
+            dgContacts.ClearSelection();
+            btnUpdateContact.Enabled = false;
+            btnRemoveSelected.Enabled = false;
         }
 
         private void btnUpdateContact_Click(object sender, EventArgs e)
         {
             if (dgContacts.SelectedRows.Count == 0)
             {
-                lblStatus.Text = "No contact selected!";
+                statusStrip1.Text = "No contact selected!";
                 return;
             }
 
@@ -129,7 +138,7 @@ namespace ContactManagerWinForms
 
             if (!ValidateInputs(selected))
             {
-                lblStatus.Text = "Validation failed! Cannot update...";
+                statusStrip1.Text = "Validation failed! Cannot update...";
                 return;
             }
 
@@ -142,14 +151,14 @@ namespace ContactManagerWinForms
             _contactsSource.ResetBindings(false);
             UpdateStatusCounts();
 
-            lblStatus.Text = $"Updated: {selected.FullName}";
+            statusStrip1.Text = $"Updated: {selected.FullName}";
         }
 
         private void btnRemoveSelected_Click(object sender, EventArgs e)
         {
             if (dgContacts.SelectedRows.Count == 0)
             {
-                lblStatus.Text = "No contact selected!";
+                statusStrip1.Text = "No contact selected!";
                 return;
             }
 
@@ -169,7 +178,11 @@ namespace ContactManagerWinForms
                 _contacts.Remove(contact);
 
             UpdateStatusCounts();
-            lblStatus.Text = "Contact removed!";
+            statusStrip1.Text = "Contact removed!";
+
+            dgContacts.ClearSelection();
+            btnUpdateContact.Enabled = false;
+            btnRemoveSelected.Enabled = false;
         }
 
         private void btnClearAll_Click(object sender, EventArgs e)
@@ -186,7 +199,7 @@ namespace ContactManagerWinForms
 
             _contacts.Clear();
             UpdateStatusCounts();
-            lblStatus.Text = "All contacts cleared!";
+            statusStrip1.Text = "All contacts cleared!";
         }
 
         private void btnApplyFilter_Click(object sender, EventArgs e)
@@ -204,7 +217,7 @@ namespace ContactManagerWinForms
             _contactsSource.DataSource = new BindingList<Contact>(filtered);
             UpdateStatusCounts();
 
-            lblStatus.Text = "Filter applied!";
+            statusStrip1.Text = "Filter applied!";
         }
 
         private void btnResetFilter_Click(object sender, EventArgs e)
@@ -215,12 +228,17 @@ namespace ContactManagerWinForms
             _contactsSource.DataSource = _contacts;
             UpdateStatusCounts();
 
-            lblStatus.Text = "Filter reset!";
+            statusStrip1.Text = "Filter reset!";
         }
 
         private void dgContacts_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgContacts.SelectedRows.Count == 0) return;
+            bool hasSelection = dgContacts.SelectedRows.Count > 0;
+
+            btnUpdateContact.Enabled = hasSelection;
+            btnRemoveSelected.Enabled = hasSelection;
+
+            if (!hasSelection) return;
 
             var c = dgContacts.SelectedRows[0].DataBoundItem as Contact;
             if (c == null) return;
@@ -231,14 +249,11 @@ namespace ContactManagerWinForms
             cmbGender.Text = c.Gender;
             dtpBirthDate.Value = c.BirthDate ?? DateTime.Today;
 
-            lblStatus.Text = $"{c.FullName} | Email: {c.Email}";
+            statusStrip1.Text = $"{c.FullName} | Email: {c.Email}";
         }
         private void InputChanged(object sender, EventArgs e)
         {
-            bool valid = ValidateInputs();
-
-            btnAddContact.Enabled = valid;
-            btnUpdateContact.Enabled = valid && dgContacts.SelectedRows.Count > 0;
+            btnAddContact.Enabled = ValidateInputs();
         }
 
         private void ClearInputs()
@@ -253,30 +268,68 @@ namespace ContactManagerWinForms
 
         private void btnExportCsv_Click(object sender, EventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog
+            using (SaveFileDialog sfd = new SaveFileDialog())
             {
-                Filter = "CSV files (*.csv)|*.csv",
-                FileName = "Contacts.csv"
-            };
+                sfd.Filter = "CSV files (*.csv)|*.csv";
+                sfd.Title = "Export to CSV";
+                sfd.FileName = "Contacts.csv";
 
-            if (sfd.ShowDialog() != DialogResult.OK) return;
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        ExportDataGridViewToCSV(dgContacts, sfd.FileName);
+                        MessageBox.Show("Export successful!", "CSV Export",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(
+                            "Error exporting CSV:\n" + ex.Message,
+                            "Export Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+        private void ExportDataGridViewToCSV(DataGridView dgv, string filePath)
+        {
+            StringBuilder sb = new StringBuilder();
 
-            var lines = new List<string>
+            // Headers
+            for (int i = 0; i < dgv.Columns.Count; i++)
             {
-                "FullName,Email,Phone,Gender,BirthDate,CreatedAt"
-            };
+                sb.Append(dgv.Columns[i].HeaderText);
+                if (i < dgv.Columns.Count - 1)
+                    sb.Append(",");
+            }
+            sb.AppendLine();
 
-            foreach (var c in (List<Contact>)dgContacts.DataSource)
+            // Rows
+            foreach (DataGridViewRow row in dgv.Rows)
             {
-                lines.Add($"{c.FullName},{c.Email},{c.Phone},{c.Gender},{c.BirthDate:d},{c.CreatedAt:g}");
+                if (!row.IsNewRow)
+                {
+                    for (int i = 0; i < dgv.Columns.Count; i++)
+                    {
+                        sb.Append(row.Cells[i].Value?.ToString());
+                        if (i < dgv.Columns.Count - 1)
+                            sb.Append(",");
+                    }
+                    sb.AppendLine();
+                }
             }
 
-            File.WriteAllLines(sfd.FileName, lines);
-            MessageBox.Show("Export successful!");
+            File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
         }
         private void UpdateStatusCounts()
         {
-            lblCounts.Text = $"Visible: {_contactsSource.Count} / Total: {_contacts.Count}";
+            statusStrip1.Text = $"Visible: {_contactsSource.Count} / Total: {_contacts.Count}";
+        }
+        private void DisplayStatus(string message)
+        {
+            lblStatus.Text = message;
         }
     }
 }
