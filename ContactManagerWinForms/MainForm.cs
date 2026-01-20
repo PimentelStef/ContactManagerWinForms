@@ -162,7 +162,11 @@ namespace ContactManagerWinForms
 
         private void btnClearAll_Click(object sender, EventArgs e)
         {
-            if (_contacts.Count == 0) return;
+            if (_contacts.Count == 0)
+            {
+                lblStatus.Text = "No contacts to clear!";
+                return;
+            }
 
             var confirm = MessageBox.Show(
                 "Clear all contacts?",
@@ -174,7 +178,7 @@ namespace ContactManagerWinForms
 
             _contacts.Clear();
             UpdateCounts();
-            statusStrip1.Text = "All contacts cleared!";
+            lblStatus.Text = "All contacts cleared!";
         }
 
         private void btnApplyFilter_Click(object sender, EventArgs e)
@@ -188,12 +192,13 @@ namespace ContactManagerWinForms
 
             _contactsSource.DataSource = new BindingList<Contact>(filtered);
 
-            lblStatus.Text = "Filter applied!";
+            lblStatus.Text = $"Filter applied: {filtered.Count} contact(s) found";
             UpdateCounts();
         }
 
         private void btnResetFilter_Click(object sender, EventArgs e)
         {
+            cmbFilterGender.SelectedIndex = 0;
             _contactsSource.DataSource = _contacts;
             lblStatus.Text = "Filter reset!";
             UpdateCounts();
@@ -217,7 +222,7 @@ namespace ContactManagerWinForms
             cmbGender.Text = c.Gender;
             dtpBirthDate.Value = c.BirthDate ?? DateTime.Today;
 
-            statusStrip1.Text = $"{c.FullName} | Email: {c.Email}";
+            lblStatus.Text = $"{c.FullName} | Email: {c.Email} | Subscribed: {(c.Subscribed ? "Yes" : "No")}";
         }
         private void InputChanged(object sender, EventArgs e)
         {

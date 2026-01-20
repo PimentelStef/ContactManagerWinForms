@@ -14,5 +14,6 @@ namespace ContactManagerWinForms
         public string Gender { get; set; }
         public DateTime? BirthDate { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-    }
+        public bool Subscribed { get; set; } 
+        }
 }
