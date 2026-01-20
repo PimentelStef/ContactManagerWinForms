@@ -397,8 +397,10 @@
             // lblCounts
             // 
             lblCounts.Name = "lblCounts";
-            lblCounts.Size = new Size(101, 17);
+            lblCounts.Size = new Size(899, 17);
+            lblCounts.Spring = true;
             lblCounts.Text = "Visible: 0 / Total: 0";
+            lblCounts.TextAlign = ContentAlignment.MiddleRight;
             // 
             // MainForm
             // 

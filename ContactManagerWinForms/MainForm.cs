@@ -16,19 +16,19 @@ namespace ContactManagerWinForms
             btnAddContact.Enabled = false;
             btnUpdateContact.Enabled = false;
             btnRemoveSelected.Enabled = false;
+
+            lblStatus.Text = "Ready";
+            UpdateCounts();
         }
 
         private void InitializeDataBinding()
         {
-            dgContacts.AutoGenerateColumns = false;
-
             _contactsSource = new BindingSource();
             _contactsSource.DataSource = _contacts;
-
             dgContacts.DataSource = _contactsSource;
 
             ConfigureDataGridViewColumns();
-            UpdateStatusCounts();
+            UpdateCounts();
 
             dgContacts.AutoGenerateColumns = false;
         }
@@ -98,16 +98,22 @@ namespace ContactManagerWinForms
 
         private void btnAddContact_Click(object sender, EventArgs e)
         {
-            if (!ValidateInputs())
+            if (string.IsNullOrWhiteSpace(txtFullName.Text))
             {
-                statusStrip1.Text = "Validation failed! Please fix errors...";
+                lblStatus.Text = "Full name is required!";
                 return;
             }
 
-            var contact = new Contact
+            if (_contacts.Any(c => c.Email == txtEmail.Text))
             {
-                FullName = txtFullName.Text.Trim(),
-                Email = txtEmail.Text.Trim(),
+                lblStatus.Text = "Email already exists!";
+                return;
+            }
+
+            Contact contact = new Contact
+            {
+                FullName = txtFullName.Text,
+                Email = txtEmail.Text,
                 Phone = mtbPhone.Text,
                 Gender = cmbGender.Text,
                 BirthDate = dtpBirthDate.Value
@@ -115,74 +121,43 @@ namespace ContactManagerWinForms
 
             _contacts.Add(contact);
 
+            lblStatus.Text = $"Added: {contact.FullName}";
+            UpdateCounts();
             ClearInputs();
-            UpdateStatusCounts();
-
-            statusStrip1.Text = $"Added: {contact.FullName}";
-
-            dgContacts.ClearSelection();
-            btnUpdateContact.Enabled = false;
-            btnRemoveSelected.Enabled = false;
         }
 
         private void btnUpdateContact_Click(object sender, EventArgs e)
         {
-            if (dgContacts.SelectedRows.Count == 0)
+            if (_contactsSource.Current is not Contact selected)
             {
-                statusStrip1.Text = "No contact selected!";
+                lblStatus.Text = "No contact selected!";
                 return;
             }
 
-            var selected = dgContacts.SelectedRows[0].DataBoundItem as Contact;
-            if (selected == null) return;
-
-            if (!ValidateInputs(selected))
-            {
-                statusStrip1.Text = "Validation failed! Cannot update...";
-                return;
-            }
-
-            selected.FullName = txtFullName.Text.Trim();
-            selected.Email = txtEmail.Text.Trim();
+            selected.FullName = txtFullName.Text;
+            selected.Email = txtEmail.Text;
             selected.Phone = mtbPhone.Text;
             selected.Gender = cmbGender.Text;
             selected.BirthDate = dtpBirthDate.Value;
 
-            _contactsSource.ResetBindings(false);
-            UpdateStatusCounts();
+            _contactsSource.ResetCurrentItem();
 
-            statusStrip1.Text = $"Updated: {selected.FullName}";
+            lblStatus.Text = $"Updated: {selected.FullName}";
+            UpdateCounts();
         }
 
         private void btnRemoveSelected_Click(object sender, EventArgs e)
         {
-            if (dgContacts.SelectedRows.Count == 0)
+            if (_contactsSource.Current is not Contact selected)
             {
-                statusStrip1.Text = "No contact selected!";
+                lblStatus.Text = "No contact selected!";
                 return;
             }
 
-            if (chkConfirmDelete.Checked)
-            {
-                var confirm = MessageBox.Show(
-                    "Are you sure you want to delete the selected contact?",
-                    "Confirm Delete",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning);
+            _contacts.Remove(selected);
 
-                if (confirm != DialogResult.Yes) return;
-            }
-
-            var contact = dgContacts.SelectedRows[0].DataBoundItem as Contact;
-            if (contact != null)
-                _contacts.Remove(contact);
-
-            UpdateStatusCounts();
-            statusStrip1.Text = "Contact removed!";
-
-            dgContacts.ClearSelection();
-            btnUpdateContact.Enabled = false;
-            btnRemoveSelected.Enabled = false;
+            lblStatus.Text = "Contact removed!";
+            UpdateCounts();
         }
 
         private void btnClearAll_Click(object sender, EventArgs e)
@@ -198,37 +173,30 @@ namespace ContactManagerWinForms
             if (confirm != DialogResult.Yes) return;
 
             _contacts.Clear();
-            UpdateStatusCounts();
+            UpdateCounts();
             statusStrip1.Text = "All contacts cleared!";
         }
 
         private void btnApplyFilter_Click(object sender, EventArgs e)
         {
-            string gender = cmbFilterGender.Text;
-            string search = txtSearch.Text.Trim().ToLower();
-
-            var filtered = _contacts.Where(c =>
-                (gender == "All" || c.Gender == gender) &&
-                (string.IsNullOrEmpty(search) ||
-                 c.FullName.ToLower().Contains(search) ||
-                 c.Email.ToLower().Contains(search))
-            ).ToList();
+            var filtered = _contacts
+                .Where(c =>
+                    (cmbFilterGender.Text == "All" || c.Gender == cmbFilterGender.Text) &&
+                    (c.FullName.Contains(txtSearch.Text, StringComparison.OrdinalIgnoreCase) ||
+                     c.Email.Contains(txtSearch.Text, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
 
             _contactsSource.DataSource = new BindingList<Contact>(filtered);
-            UpdateStatusCounts();
 
-            statusStrip1.Text = "Filter applied!";
+            lblStatus.Text = "Filter applied!";
+            UpdateCounts();
         }
 
         private void btnResetFilter_Click(object sender, EventArgs e)
         {
-            cmbFilterGender.SelectedIndex = 0;
-            txtSearch.Clear();
-
             _contactsSource.DataSource = _contacts;
-            UpdateStatusCounts();
-
-            statusStrip1.Text = "Filter reset!";
+            lblStatus.Text = "Filter reset!";
+            UpdateCounts();
         }
 
         private void dgContacts_SelectionChanged(object sender, EventArgs e)
@@ -323,9 +291,9 @@ namespace ContactManagerWinForms
 
             File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
         }
-        private void UpdateStatusCounts()
+        private void UpdateCounts()
         {
-            statusStrip1.Text = $"Visible: {_contactsSource.Count} / Total: {_contacts.Count}";
+            lblCounts.Text = $"Visible: {_contactsSource.Count} / Total: {_contacts.Count}";
         }
         private void DisplayStatus(string message)
         {
